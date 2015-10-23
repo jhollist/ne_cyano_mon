@@ -7,28 +7,39 @@
 
 library(shiny)
 library(dplyr)
+
 dat<-read.csv("Data2014.csv",stringsAsFactors = FALSE)%>%
   filter(SampleLocation != "Other" ||
-         SampleLocation != "Calibration" ||
-         SampleLocation != "Blank") %>%
+           SampleLocation != "Calibration" ||
+           SampleLocation != "Blank") %>%
   filter(!Flag) %>%
   filter(Fluorometer == "Beagle")%>%
   filter(Units=="ug/l")%>%
   filter(!is.na(Longitude))%>%
   filter(!is.na(Latitude))
 
-dat_disp<- dat %>%
-  select(SiteID,WaterbodyName,State)
-
 shinyServer(function(input, output) {
 
-  output$cyanoData <- DT::renderDataTable(dat_disp,filter = "top",
+  #output$choose_columns <- renderUI({
+  #  selectInput("sel_cols", "Columns to show:", names(dat),
+  #              selected = c("State","Parameter","Value","Units"),multiple=TRUE)
+  #  })
+
+  output$checkbox <- renderUI({
+    checkboxGroupInput("check_cols", "Columns", names(dat),
+                       selected = c("State","Parameter","Value","Units"),
+                       inline = TRUE)
+  })
+
+  output$cyanoData <- DT::renderDataTable({dat[, input$check_cols, drop=FALSE]},
+                                          filter = "top",
                                           server = FALSE)
   output$downloadData <-
     downloadHandler("data.csv",
                     content = function(file) {
-                    filt <- input$cyanoData_rows_all
-                    write.csv(dat[filt,], file)
+                    rows <- input$cyanoData_rows_all
+                    cols <- input$check_cols
+                    write.csv(dat[rows,cols], file)
                     })
   })
 

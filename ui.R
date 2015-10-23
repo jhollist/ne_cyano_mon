@@ -6,6 +6,17 @@
 #
 
 library(shiny)
+library(dplyr)
+
+#dat<-read.csv("Data2014.csv",stringsAsFactors = FALSE)%>%
+#  filter(SampleLocation != "Other" ||
+#           SampleLocation != "Calibration" ||
+#           SampleLocation != "Blank") %>%
+#  filter(!Flag) %>%
+#  filter(Fluorometer == "Beagle")%>%
+#  filter(Units=="ug/l")%>%
+#  filter(!is.na(Longitude))%>%
+#  filter(!is.na(Latitude))
 
 shinyUI(fluidPage(
 
@@ -15,6 +26,12 @@ shinyUI(fluidPage(
   # Sidebar with a slider input for number of bins
   sidebarLayout(
     sidebarPanel(
+      #selectInput('sel_cols', 'Columns to show:', names(dat),
+      #            selected = c("State"),multiple=TRUE),
+
+      #uiOutput("choose_columns"),
+      uiOutput("checkbox"),
+
       downloadButton('downloadData', 'Download Data')
     ),
 
