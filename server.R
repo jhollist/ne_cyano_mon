@@ -32,8 +32,8 @@ shinyServer(function(input, output) {
                        inline = TRUE)
   })
 
-  output$cyanoData <- renderDataTable({dat[, input$check_cols, drop=FALSE]},
-                                          filter = "bottom",
+  output$cyanoData <- DT::renderDataTable({dat[, input$check_cols, drop=FALSE]},
+                                          filter = "top",
                                           server = TRUE)
 
   output$downloadData <-
@@ -43,5 +43,6 @@ shinyServer(function(input, output) {
                     cols <- input$check_cols
                     write.csv(dat[rows,cols], file)
                     })
+
   })
 
