@@ -7,6 +7,7 @@
 
 library(shiny)
 library(dplyr)
+library(DT)
 
 dat<-read.csv("Data2014.csv",stringsAsFactors = FALSE)%>%
   filter(SampleLocation != "Other" ||
@@ -31,9 +32,10 @@ shinyServer(function(input, output) {
                        inline = TRUE)
   })
 
-  output$cyanoData <- DT::renderDataTable({dat[, input$check_cols, drop=FALSE]},
-                                          filter = "top",
-                                          server = FALSE)
+  output$cyanoData <- renderDataTable({dat[, input$check_cols, drop=FALSE]},
+                                          filter = "bottom",
+                                          server = TRUE)
+
   output$downloadData <-
     downloadHandler("data.csv",
                     content = function(file) {

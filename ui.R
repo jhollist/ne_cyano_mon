@@ -7,6 +7,7 @@
 
 library(shiny)
 library(dplyr)
+library(DT)
 
 #dat<-read.csv("Data2014.csv",stringsAsFactors = FALSE)%>%
 #  filter(SampleLocation != "Other" ||
@@ -37,7 +38,7 @@ shinyUI(fluidPage(
 
     # Show a plot of the generated distribution
     mainPanel(
-      DT::dataTableOutput("cyanoData")
+      dataTableOutput("cyanoData")
     )
   )
 ))
