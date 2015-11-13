@@ -8,16 +8,52 @@
 library(shiny)
 library(dplyr)
 library(DT)
+library(leaflet)
 
-#dat<-read.csv("Data2014.csv",stringsAsFactors = FALSE)%>%
-#  filter(SampleLocation != "Other" ||
-#           SampleLocation != "Calibration" ||
-#           SampleLocation != "Blank") %>%
-#  filter(!Flag) %>%
-#  filter(Fluorometer == "Beagle")%>%
-#  filter(Units=="ug/l")%>%
-#  filter(!is.na(Longitude))%>%
-#  filter(!is.na(Latitude))
+################################################################################
+#Maps Tab UI
+################################################################################
+map_tab <- sidebarLayout(
+  sidebarPanel(),
+  mainPanel(leafletOutput("map"))
+)
+
+################################################################################
+#Analysis Tab UI
+################################################################################
+analysis_tab <- sidebarLayout(
+  sidebarPanel(
+    #Controls for boxplots
+
+  ),
+  mainPanel(
+    #boxplots for chla or phyco
+  )
+)
+
+################################################################################
+#Data Tab UI
+################################################################################
+data_tab <- sidebarLayout(
+  sidebarPanel(
+    #selectInput('sel_cols', 'Columns to show:', names(dat),
+    #            selected = c("State"),multiple=TRUE),
+
+    #uiOutput("choose_columns"),
+    uiOutput("checkbox"),
+
+    downloadButton('downloadData', 'Download Data')
+  ),
+
+  # Show a plot of the generated distribution
+  mainPanel(
+    dataTableOutput("cyanoData")
+  )
+)
+
+################################################################################
+#Combined UI
+################################################################################
 
 shinyUI(fluidPage(
 
@@ -25,20 +61,11 @@ shinyUI(fluidPage(
   titlePanel("New England Regional Cyanobacteria Monitoring Group Data Explorer"),
 
   # Sidebar with a slider input for number of bins
-  sidebarLayout(
-    sidebarPanel(
-      #selectInput('sel_cols', 'Columns to show:', names(dat),
-      #            selected = c("State"),multiple=TRUE),
-
-      #uiOutput("choose_columns"),
-      uiOutput("checkbox"),
-
-      downloadButton('downloadData', 'Download Data')
-    ),
-
-    # Show a plot of the generated distribution
-    mainPanel(
-      dataTableOutput("cyanoData")
+  tabsetPanel(
+    tabPanel("Maps", map_tab),
+    tabPanel("Analysis"),
+    tabPanel("Data", data_tab)
     )
   )
-))
+)
+

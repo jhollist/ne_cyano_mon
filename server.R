@@ -8,6 +8,7 @@
 library(shiny)
 library(dplyr)
 library(DT)
+library(leaflet)
 
 dat<-read.csv("Data2014.csv",stringsAsFactors = FALSE)%>%
   filter(SampleLocation != "Other" ||
@@ -18,6 +19,8 @@ dat<-read.csv("Data2014.csv",stringsAsFactors = FALSE)%>%
   filter(Units=="ug/l")%>%
   filter(!is.na(Longitude))%>%
   filter(!is.na(Latitude))
+
+locs <- unique(data.frame(Longitude = dat$Longitude, Latitude = dat$Latitude))
 
 shinyServer(function(input, output) {
 
@@ -44,5 +47,12 @@ shinyServer(function(input, output) {
                     write.csv(dat[rows,cols], file)
                     })
 
+  output$map <- renderLeaflet({
+    leaflet(data = locs) %>%
+      addTiles() %>%
+      addMarkers(~Longitude,~Latitude)
+
   })
+
+})
 
