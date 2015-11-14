@@ -30,11 +30,9 @@ locs <- data.frame(LocID = dat$LocID, Longitude = dat$Longitude, Latitude = dat$
 
 shinyServer(function(input, output) {
 
-  #output$choose_columns <- renderUI({
-  #  selectInput("sel_cols", "Columns to show:", names(dat),
-  #              selected = c("State","Parameter","Value","Units"),multiple=TRUE)
-  #  })
-
+  ##############################################################################
+  #Data Tab
+  ##############################################################################
   output$checkbox <- renderUI({
     checkboxGroupInput("check_cols", "Columns", names(dat),
                        selected = c("State","Parameter","Value","Units"),
@@ -52,6 +50,10 @@ shinyServer(function(input, output) {
                     cols <- input$check_cols
                     write.csv(dat[rows,cols], file)
                     })
+
+  ##############################################################################
+  #Map Tab
+  ##############################################################################
   output$mapselect <- renderUI({
     selectInput('map_param', 'Variable to map:',
               c("Chlorophyll","Phycocyanin"),
@@ -69,6 +71,10 @@ shinyServer(function(input, output) {
       addCircleMarkers(~Longitude,~Latitude,color = rmp)
 
   })
+
+  ##############################################################################
+  #Analysis Tab
+  ##############################################################################
 
 })
 
