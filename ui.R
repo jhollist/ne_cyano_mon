@@ -14,7 +14,7 @@ library(leaflet)
 #Maps Tab UI
 ################################################################################
 map_tab <- sidebarLayout(
-  sidebarPanel(),
+  sidebarPanel(uiOutput("mapselect")),
   mainPanel(leafletOutput("map"))
 )
 
@@ -36,12 +36,7 @@ analysis_tab <- sidebarLayout(
 ################################################################################
 data_tab <- sidebarLayout(
   sidebarPanel(
-    #selectInput('sel_cols', 'Columns to show:', names(dat),
-    #            selected = c("State"),multiple=TRUE),
-
-    #uiOutput("choose_columns"),
     uiOutput("checkbox"),
-
     downloadButton('downloadData', 'Download Data')
   ),
 

@@ -20,7 +20,13 @@ dat<-read.csv("Data2014.csv",stringsAsFactors = FALSE)%>%
   filter(!is.na(Longitude))%>%
   filter(!is.na(Latitude))
 
-locs <- unique(data.frame(Longitude = dat$Longitude, Latitude = dat$Latitude))
+#Need to figure out how to get this down to mean Value per location
+locs <- data.frame(LocID = dat$LocID, Longitude = dat$Longitude, Latitude = dat$Latitude,
+                   Parameter = dat$Parameter, Value = dat$Value) %>%
+  group_by(LocID,Longitude,Latitude, Parameter) %>%
+  summarize(mean(Value))%>%
+  data.frame
+
 
 shinyServer(function(input, output) {
 
@@ -46,11 +52,18 @@ shinyServer(function(input, output) {
                     cols <- input$check_cols
                     write.csv(dat[rows,cols], file)
                     })
+  output$mapselect <- renderUI({
+    selectInput('map_param', 'Variable to map:',
+              c("Chlorophyll","Phycocyanin"),
+              selected = c("Chlorophyll"))})
 
+  filtered_locs <- reactive({locs[locs$Parameter == input$map_param,]})
+  colrmp <- colorRampPalette(c("black", "white"))
+  rmp <- colrmp(nrow(filtered_locs))
   output$map <- renderLeaflet({
-    leaflet(data = locs) %>%
+    leaflet(data = filtered_locs()) %>%
       addTiles() %>%
-      addMarkers(~Longitude,~Latitude)
+      addCircleMarkers(~Longitude,~Latitude,color = rmp)
 
   })
 
