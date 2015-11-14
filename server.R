@@ -24,8 +24,8 @@ dat<-read.csv("Data2014.csv",stringsAsFactors = FALSE)%>%
 locs <- data.frame(LocID = dat$LocID, Longitude = dat$Longitude, Latitude = dat$Latitude,
                    Parameter = dat$Parameter, Value = dat$Value) %>%
   group_by(LocID,Longitude,Latitude, Parameter) %>%
-  summarize(mean(Value))%>%
-  data.frame
+  summarize(Value = mean(Value))%>%
+  data.frame()
 
 
 shinyServer(function(input, output) {
@@ -57,9 +57,12 @@ shinyServer(function(input, output) {
               c("Chlorophyll","Phycocyanin"),
               selected = c("Chlorophyll"))})
 
-  filtered_locs <- reactive({locs[locs$Parameter == input$map_param,]})
+  filtered_locs <- reactive({
+    locs<-locs[locs$Parameter == input$map_param,]
+    locs[order(locs$Value),]
+    })
   colrmp <- colorRampPalette(c("black", "white"))
-  rmp <- colrmp(nrow(filtered_locs))
+  rmp <- colrmp(195)
   output$map <- renderLeaflet({
     leaflet(data = filtered_locs()) %>%
       addTiles() %>%
