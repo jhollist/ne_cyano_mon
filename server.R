@@ -54,10 +54,10 @@ shinyServer(function(input, output) {
   ##############################################################################
   #Map Tab
   ##############################################################################
-  output$mapselect <- renderUI({
-    selectInput('map_param', 'Variable to map:',
-              c("Chlorophyll","Phycocyanin"),
-              selected = c("Chlorophyll"))})
+  #output$mapselect <- renderUI({
+  #  selectInput('map_param', 'Variable to map:',
+  #            c("Chlorophyll","Phycocyanin"),
+  #            selected = c("Chlorophyll"))})
 
   filtered_locs <- reactive({
     locs<-locs[locs$Parameter == input$map_param,]
@@ -75,23 +75,18 @@ shinyServer(function(input, output) {
   ##############################################################################
   #Analysis Tab
   ##############################################################################
-  #chla_dat <- dat[dat$Parameter == "Chlorophyll",]
-  #phyco_dat <- dat[dat$Parameter == "Phycocyanin",]
+  chla_dat <- dat[dat$Parameter == "Chlorophyll",]
+  phyco_dat <- dat[dat$Parameter == "Phycocyanin",]
 
-  output$boxplotselect <- renderUI({
-    selectInput('categ', 'Boxplot x-axis:',
-                c("State","Filtered","Frozen"),
-                selected = c("State"))
+  formulaText <- reactive ({
+    paste("log1p(Value) ~", input$categ)
   })
 
-  #forumlaText <- reactive ({
-  #  paste("Parameter ~", input$categ)
-  #})
+  output$chlaPlot <- renderPlot({
+    boxplot(as.formula(formulaText()),data=chla_dat, main = "Chlorophyll a")
+  })
 
-  #output$chlaPlot <- renderPlot({
-  #  boxplot(as.formula(formulaText()),data=chla_dat)})
-
-  #output$phycoPlot <- renderPlot({
-  #  boxplot(as.formula(formulaText()),data=phyco_dat)})
+  output$phycoPlot <- renderPlot({
+    boxplot(as.formula(formulaText()),data=phyco_dat, main = "Phycocyanin")})
 })
 

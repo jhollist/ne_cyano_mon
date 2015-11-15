@@ -14,7 +14,9 @@ library(leaflet)
 #Maps Tab UI
 ################################################################################
 map_tab <- sidebarLayout(
-  sidebarPanel(uiOutput("mapselect")),
+  sidebarPanel(selectInput('map_param', 'Variable to map:',
+                          c("Chlorophyll","Phycocyanin"),
+                          selected = c("Chlorophyll"))),
   mainPanel(leafletOutput("map"))
 )
 
@@ -22,11 +24,12 @@ map_tab <- sidebarLayout(
 #Analysis Tab UI
 ################################################################################
 analysis_tab <- sidebarLayout(
-  sidebarPanel(uiOutput("boxplotselect")),
- #sidebarPanel(),
+  sidebarPanel(selectInput('categ', 'Boxplot x-axis:',
+                           c("State","Filtered","Frozen"),
+                           selected = c("State"))),
   mainPanel(
-    #plotOutput("chlaPlot")
-    #plotOutput("phycoPlot")
+    plotOutput("chlaPlot"),
+    plotOutput("phycoPlot")
   )
 )
 
@@ -57,7 +60,7 @@ shinyUI(fluidPage(
   # Sidebar with a slider input for number of bins
   tabsetPanel(
     tabPanel("Maps", map_tab),
-    tabPanel("Analysis"),
+    tabPanel("Analysis", analysis_tab),
     tabPanel("Data", data_tab)
     )
   )
