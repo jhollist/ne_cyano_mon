@@ -75,6 +75,23 @@ shinyServer(function(input, output) {
   ##############################################################################
   #Analysis Tab
   ##############################################################################
+  #chla_dat <- dat[dat$Parameter == "Chlorophyll",]
+  #phyco_dat <- dat[dat$Parameter == "Phycocyanin",]
 
+  output$boxplotselect <- renderUI({
+    selectInput('categ', 'Boxplot x-axis:',
+                c("State","Filtered","Frozen"),
+                selected = c("State"))
+  })
+
+  #forumlaText <- reactive ({
+  #  paste("Parameter ~", input$categ)
+  #})
+
+  #output$chlaPlot <- renderPlot({
+  #  boxplot(as.formula(formulaText()),data=chla_dat)})
+
+  #output$phycoPlot <- renderPlot({
+  #  boxplot(as.formula(formulaText()),data=phyco_dat)})
 })
 

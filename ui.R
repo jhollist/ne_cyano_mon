@@ -22,12 +22,11 @@ map_tab <- sidebarLayout(
 #Analysis Tab UI
 ################################################################################
 analysis_tab <- sidebarLayout(
-  sidebarPanel(
-    #Controls for boxplots
-
-  ),
+  sidebarPanel(uiOutput("boxplotselect")),
+ #sidebarPanel(),
   mainPanel(
-    #boxplots for chla or phyco
+    #plotOutput("chlaPlot")
+    #plotOutput("phycoPlot")
   )
 )
 
